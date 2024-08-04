@@ -1,12 +1,12 @@
 {
-    "AWSEBDockerrunVersion": "1",
-    "Image": {
-        "Name": "public.ecr.aws/b2n3p6u5/projectcontainer",
-        "Update": "true"
-    },
-    "Ports": [
-        {
-            "ContainerPort": "8080"
-        }
-    ]
+  "AWSEBDockerrunVersion": "1",
+  "Image": {
+    "Name": "533538027922.dkr.ecr.ap-south-1.amazonaws.com/demo-node-app",
+    "Update": "true"
+  },
+  "Ports": [
+    {
+      "ContainerPort": "8080"
+    }
+  ]
 }
