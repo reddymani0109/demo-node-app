@@ -1,5 +1,8 @@
 pipeline {
     agent any
+    tools{
+        nodejs 'nodejs'
+    }
     environment {
         AWS_DEFAULT_REGION = "ap-south-1"
         AWS_ACCOUNT_ID = "533538027922"
@@ -8,6 +11,7 @@ pipeline {
         EB_APPLICATION_NAME = "Demo-Node-Application"
         EB_ENVIRONMENT_NAME = "Demo-Node-Application-dev"
         S3_BUCKET = "elasticbeanstalk-ap-south-1-533538027922"
+        SCANNER_HOME = tool 'sonar-scanner'
     }
     stages {
         stage("Git Checkout") {
@@ -15,7 +19,20 @@ pipeline {
                 checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[credentialsId: 'github-creds', url: 'https://github.com/reddymani0109/demo-node-app.git']])
             }
         }
-        stage("Build Docker Image") {
+        stage("Sonar Scan"){
+            steps{
+                withSonarQubeEnv(credentialsId: 'sonar-jenkins-token', installationName: 'sonar-server') {
+                 bat "npm install -g sonarqube-scanner"
+                 bat "sonar-scanner -Dsonar.ProjectVersion=${BUILD_NUMBER}"
+                }
+                timeout(time: 1, unit: 'HOURS') {
+                waitForQualityGate abortPipeline: true
+              }
+                
+            }
+        }
+        
+         stage("Build Docker Image") {
             steps {
                 bat " docker build -t ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/${ECR_REPOSITORY}:${IMAGE_TAG} . "
             }
@@ -38,6 +55,6 @@ pipeline {
             """
                 }
             }
-        }
+        } 
     }
 }
