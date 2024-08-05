@@ -8,8 +8,8 @@ pipeline {
         AWS_ACCOUNT_ID = "533538027922"
         ECR_REPOSITORY = "demo-node-app"
         IMAGE_TAG = "${BUILD_NUMBER}"
-        EB_APPLICATION_NAME = "Demo-Node-Application"
-        EB_ENVIRONMENT_NAME = "Demo-Node-Application-dev"
+        EB_APPLICATION_NAME = "Demo-Node-App"
+        EB_ENVIRONMENT_NAME = "Demo-Node-App-dev"
         S3_BUCKET = "elasticbeanstalk-ap-south-1-533538027922"
         SCANNER_HOME = tool 'sonar-scanner'
     }
