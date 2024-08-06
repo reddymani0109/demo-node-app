@@ -19,7 +19,7 @@ pipeline {
                 checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[credentialsId: 'github-creds', url: 'https://github.com/reddymani0109/demo-node-app.git']])
             }
         }
-        stage("Sonar Scan"){
+       /* stage("Sonar Scan"){
             steps{
                 withSonarQubeEnv(credentialsId: 'sonar-jenkins-token', installationName: 'sonar-server') {
                  bat "npm install -g sonarqube-scanner"
@@ -30,7 +30,7 @@ pipeline {
               }
                 
             }
-        }
+        } */
         
          stage("Build Docker Image") {
             steps {
@@ -47,9 +47,9 @@ pipeline {
         }
         stage("EB Deploy") {
             steps {
-                bat " 7z a -tzip deployement-package.zip Dockerrun.aws.json "
+                bat " 7z a -tzip deployement-package-${IMAGE_TAG}.zip Dockerrun.aws.json "
                 withAWS(credentials: 'manikanta-aws-cli-creds', region: "${AWS_DEFAULT_REGION}") {
-                    bat """ aws s3 cp deployement-package.zip s3://${S3_BUCKET}/${EB_APPLICATION_NAME}-${IMAGE_TAG}.zip
+                    bat """ aws s3 cp deployement-package-${IMAGE_TAG}.zip s3://${S3_BUCKET}/${EB_APPLICATION_NAME}-${IMAGE_TAG}.zip
             aws elasticbeanstalk create-application-version --application-name ${EB_APPLICATION_NAME} --version-label ${IMAGE_TAG} --source-bundle S3Bucket=${S3_BUCKET},S3Key=${EB_APPLICATION_NAME}-${IMAGE_TAG}.zip
             aws elasticbeanstalk update-environment --application-name ${EB_APPLICATION_NAME} --environment-name ${EB_ENVIRONMENT_NAME} --version-label ${IMAGE_TAG}
             """
