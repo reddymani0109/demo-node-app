@@ -1,5 +1,5 @@
 {
-  "AWSEBDockerrunVersion": "2",
+  "AWSEBDockerrunVersion": "1",
   "Image": {
     "Name": "533538027922.dkr.ecr.ap-south-1.amazonaws.com/demo-node-app",
     "Update": "true"
